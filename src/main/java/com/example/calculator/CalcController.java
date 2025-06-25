@@ -21,15 +21,15 @@ public class CalcController {
 
     @FXML
     public void handleDigit(ActionEvent event) {
-        Button button = (Button) event.getSource();  // Der geklickte Button
-        String value = button.getText();             // Ziffer auslesen
+        Button button = (Button) event.getSource();
+        String value = button.getText();             //number that is inputted
         currentInput += value;
-        display.setText(currentInput);               // Anzeige aktualisieren
+        display.setText(currentInput);               //updates display
     }
 
     @FXML
     public void handleOperator(ActionEvent event) {
-        //converts buttons that were pressed into an Integer
+        //converts buttons that were pressed into a Double
         if(! currentInput.isEmpty()) {
             operands.add(Double.parseDouble(currentInput));
             currentInput = "";
@@ -42,14 +42,16 @@ public class CalcController {
         display.setText(display.getText() + " " + op + " ");
     }
 
+    /**
+     * This method performs simple arithmetic operations.
+     */
     @FXML
     public void calculate() {
-        //converts buttons that were pressed into an Integer
+        //converts buttons that were pressed into a Double
         if(! currentInput.isEmpty()) {
             operands.add(Double.parseDouble(currentInput));
             currentInput = "";
         }
-
 
         if(operands.size() < 2 || operators.isEmpty()) {
             display.setText("INCOMPLETE EXPRESSION!");
