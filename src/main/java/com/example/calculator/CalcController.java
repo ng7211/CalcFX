@@ -6,7 +6,15 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+
 public class CalcController {
+    private final List<Double> operands = new ArrayList<>();
+    private final List<String> operators = new ArrayList<>();
+
     @FXML
     private TextField display;
     private String currentInput = "";
@@ -19,35 +27,67 @@ public class CalcController {
         display.setText(currentInput);               // Anzeige aktualisieren
     }
 
+    @FXML
     public void handleOperator(ActionEvent event) {
-        Button button = (Button) event.getSource();
-        String operator = button.getText();
-        currentInput += " ";
-        currentInput += operator;
-        currentInput += " ";
-        display.setText(currentInput);
-    }
-
-    public void calculate() {
-        String[] parts = currentInput.split(" ");
-        int firstOperand = Integer.parseInt(parts[0]);
-        int secondOperand = Integer.parseInt(parts[2]);
-        int result = 0;
-
-        switch (parts[1]) {
-            case "+" -> result = firstOperand + secondOperand;
-            case "-" -> result = firstOperand - secondOperand;
-            case "*" -> result = firstOperand * secondOperand;
-            case "/" -> result = firstOperand / secondOperand;
-            default -> display.setText(parts[0] + ": Programm can't work with this symbol |:");
+        //converts buttons that were pressed into an Integer
+        if(! currentInput.isEmpty()) {
+            operands.add(Double.parseDouble(currentInput));
+            currentInput = "";
         }
 
-        display.setText(String.valueOf(result));
+        Button button = (Button) event.getSource();
+        String op = button.getText();
+        operators.add(op);
 
+        display.setText(display.getText() + " " + op + " ");
     }
 
+    @FXML
+    public void calculate() {
+        //converts buttons that were pressed into an Integer
+        if(! currentInput.isEmpty()) {
+            operands.add(Double.parseDouble(currentInput));
+            currentInput = "";
+        }
+
+
+        if(operands.size() < 2 || operators.isEmpty()) {
+            display.setText("INCOMPLETE EXPRESSION!");
+            return;
+        }
+
+        double result = operands.getFirst(); //first number
+        int opIndex = 1;
+
+        for (String op : operators){
+            if (opIndex >= operands.size()) break;
+
+            double next = operands.get(opIndex++);
+            switch (op) {
+                case "+" -> result += next;
+                case "-" -> result -= next;
+                case "*" -> result *= next;
+                case "/" -> {
+                    if(next == 0) {
+                        display.setText("Division by zero is not defined!");
+                        return;
+                    }
+                    result /= next;
+                }
+                case "^" -> result = Math.pow(result, next);
+            }
+        }
+        display.setText(String.valueOf(result));
+        operands.clear();
+        operators.clear();
+        currentInput = String.valueOf(result); //ensuring further operations with result of former operations
+    }
+
+    @FXML
     public void clear() {
         display.clear();
+        operators.clear();
+        operands.clear();
         currentInput = "";
     }
 }

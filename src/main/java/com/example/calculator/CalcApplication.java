@@ -11,7 +11,7 @@ public class CalcApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(CalcApplication.class.getResource("taschenrechner.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 300, 240);
         stage.setTitle("Calculator By Demy <3");
         stage.setScene(scene);
         stage.show();
